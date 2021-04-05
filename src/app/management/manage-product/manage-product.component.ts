@@ -23,6 +23,9 @@ export class ManageProductComponent implements OnInit {
 
   product;
   products;
+
+  editProduct :Product = new Product();
+
   ngOnInit(): void {
     this.productForm = this.formBuilder.group({
       reference: ['', Validators.required],
@@ -63,8 +66,30 @@ export class ManageProductComponent implements OnInit {
     console.log(id);
   }
 
-  public onUpdateEmloyee(product: Product): void {
+  public onClickEdit(product: Product): void {
+    console.log(product);
+    this.editProduct = product;
     /*this.productService.updateProduct(product).subscribe(
+      (response: Product) => {
+        console.log(response);
+        //this.getEmployees();
+      },
+      (error) => {
+        alert(error.message);
+      }
+    );*/
+  }
+
+  update(){
+    console.log(this.editProduct);
+
+    const updatedProductData = new FormData();
+    if(this.selectedFile!=null){
+      updatedProductData.append('image', this.selectedFile);
+    }
+    updatedProductData.append('product', JSON.stringify(this.editProduct));
+
+    /*this.productService.updateProduct(updatedProductData).subscribe(
       (response: Product) => {
         console.log(response);
         //this.getEmployees();

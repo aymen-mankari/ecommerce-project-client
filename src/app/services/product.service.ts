@@ -32,8 +32,8 @@ export class ProductService {
     return this.http.get<Product>(API_HOST + '/product/getOne'+ `/${id}`);
   }
 
-  updateProduct(id: string, updatedProduct: Product): Observable<Product> {
-    return this.http.put<Product>(API_HOST + '/product/update' + `/${id}`, updatedProduct);
+  updateProduct(updatedProduct): Observable<Product> {
+    return this.http.put<Product>(API_HOST + '/product/update', updatedProduct);
   }
 
   deleteProduct(id: string): Observable<Product> {
