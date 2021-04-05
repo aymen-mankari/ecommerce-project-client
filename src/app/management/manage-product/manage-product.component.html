@@ -1,0 +1,144 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <h1 class="display-4 pt-5 mb-0">Manage products</h1>
+    <hr class="mt-0 mb-3 bg-dark">
+    <div class="d-flex p-2 bd-highlight mb-2">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#saveProduct">Add
+            product</button>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">#</th>
+                <th scope="col">Designation</th>
+                <th scope="col">Description</th>
+                <th scope="col">Price</th>
+                <th scope="col">Stock Quantity</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let p of products" (click)="onRowClick(p.idProduct)">
+                <th scope="row">
+                    <img src="data:image/jpeg;base64,{{ p.picByte }}" width="100" alt="image">
+                </th>
+                <td>{{p.reference}}</td>
+                <td>{{p.designation}}</td>
+                <td>{{p.description}}</td>
+                <td>{{p.price}}</td>
+                <td>{{p.stockQuantity}}</td>
+                <td>
+                    <button type="button" class="btn btn-warning mr-1" data-toggle="modal" data-target="#editProduct">Edit</button>
+                    <button type="button" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="saveProduct" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form [formGroup]="productForm" (ngSubmit)="save()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Add product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputUsername">Reference</label>
+                            <input type="text" formControlName="reference" class="form-control" id="inputReference" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword">Designation</label>
+                            <input type="text" formControlName="designation" class="form-control" id="inputDesignation">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputFullname">Description</label>
+                        <input type="text" formControlName="description" class="form-control" id="inputDescription" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail">Price</label>
+                        <input type="number" formControlName="price" class="form-control" id="inputPrice" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPhone">Stock Quantity</label>
+                        <input type="number" formControlName="stockQuantity" class="form-control"
+                            id="inputStockQuantity" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="file" (change)="onFileChanged($event)">
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">Sign in</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editProduct" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form [formGroup]="productForm" (ngSubmit)="edit()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Add product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputUsername">Reference</label>
+                            <input type="text" formControlName="reference" class="form-control" id="inputReference" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword">Designation</label>
+                            <input type="text" formControlName="designation" class="form-control" id="inputDesignation">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputFullname">Description</label>
+                        <input type="text" formControlName="description" ngModel="{{editEmployee?.imageUrl}}" class="form-control" id="inputDescription" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail">Price</label>
+                        <input type="number" formControlName="price" class="form-control" id="inputPrice" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPhone">Stock Quantity</label>
+                        <input type="number" formControlName="stockQuantity" class="form-control"
+                            id="inputStockQuantity" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="file" (change)="onFileChanged($event)">
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">Sign in</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
