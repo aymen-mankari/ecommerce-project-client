@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
-
+declare const $: any;
 @Component({
   selector: 'app-manage-product',
   templateUrl: './manage-product.component.html',
   styleUrls: ['./manage-product.component.css']
 })
 export class ManageProductComponent implements OnInit {
-
+  
   constructor(private productService: ProductService, private formBuilder: FormBuilder) { }
 
   productForm: FormGroup;
@@ -35,6 +35,14 @@ export class ManageProductComponent implements OnInit {
       stockQuantity: ['', Validators.required]
     });
 
+    /*this.productService.getAllProducts().subscribe(data =>{
+      console.log(data);
+      this.products = data;
+    } , error => console.error(error));*/
+    this.refreshListproducts();
+  }
+
+  refreshListproducts(){
     this.productService.getAllProducts().subscribe(data =>{
       console.log(data);
       this.products = data;
@@ -48,6 +56,7 @@ export class ManageProductComponent implements OnInit {
   }
 
   save() {
+    
     this.product = this.productForm.value;
     console.log(this.product);
 
@@ -58,13 +67,16 @@ export class ManageProductComponent implements OnInit {
     console.log(productData);
 
     this.productService.saveProduct(productData)
-      .subscribe(response => console.log(response),
+      .subscribe(response =>{
+        this.refreshListproducts();
+        console.log(response);
+      },
         error => console.error(error));
+
+    $('#saveProduct').modal('hide');
+
   }
 
-  onRowClick(id){
-    console.log(id);
-  }
 
   public onClickEdit(product: Product): void {
     console.log(product);
@@ -80,8 +92,8 @@ export class ManageProductComponent implements OnInit {
     );*/
   }
 
-  update(){
-    console.log(this.editProduct);
+  update(product : Product){
+    console.log(product);
 
     const updatedProductData = new FormData();
     if(this.selectedFile!=null){
@@ -98,5 +110,10 @@ export class ManageProductComponent implements OnInit {
         alert(error.message);
       }
     );*/
+  }
+
+  detailProduct=new Product();
+  onRowClick(product){
+    this.detailProduct = product;
   }
 }

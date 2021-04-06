@@ -5,5 +5,5 @@ export class Product {
     description: string;
     price: number;
     stockQuantity: number;
-    image : any;
+    picByte : any;
 }

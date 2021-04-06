@@ -21,7 +21,7 @@ export class ProductService {
   private headers = new HttpHeaders({ 'Content-Type': 'undefined' });
 
   saveProduct(product) {
-    return this.http.post(API_HOST + '/product/create', product);
+    return this.http.post(API_HOST + '/product/update', product);
   }
 
   getAllProducts(): Observable<Product[]> {

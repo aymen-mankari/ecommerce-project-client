@@ -19,7 +19,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let p of products" (click)="onRowClick(p.idProduct)">
+            <tr *ngFor="let p of products">
                 <th scope="row">
                     <img src="data:image/jpeg;base64,{{ p.picByte }}" width="100" alt="image">
                 </th>
@@ -29,6 +29,7 @@
                 <td>{{p.price}}</td>
                 <td>{{p.stockQuantity}}</td>
                 <td>
+                    <button type="button" class="btn btn-info mr-1" data-toggle="modal" data-target="#showProduct" (click)="onRowClick(p)">Show details</button>
                     <button type="button" class="btn btn-warning mr-1" data-toggle="modal" data-target="#editProduct" (click)="onClickEdit(p)">Edit</button>
                     <button type="button" class="btn btn-danger">Delete</button>
                 </td>
@@ -37,7 +38,7 @@
     </table>
 </div>
 
-<!-- Add Modal -->
+<!-- Save product Modal -->
 <div class="modal fade" id="saveProduct" data-backdrop="static" tabindex="-1" role="dialog"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -83,18 +84,18 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">Sign in</button>
+                    <button type="submit" class="btn btn-success" [disabled]="productForm.invalid">Save</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Edit Modal -->
+<!-- Edit product Modal -->
 <div class="modal fade" id="editProduct" data-backdrop="static" tabindex="-1" role="dialog"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form (ngSubmit)="update()">
+            <form #editForm="ngForm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">Add product</h5>
@@ -107,12 +108,12 @@
                         <img src="data:image/jpeg;base64,{{ editProduct.picByte }}"alt="..." class="col-sm mb-1 img-thumbnail">
                         <div class="form-group col-md-6">
                             <label for="inputUsername">Reference</label>
-                            <input type="text" [(ngModel)]="editProduct.reference" class="form-control" name="reference" id="inputReference" />
-                            <input type="hidden" [(ngModel)]="editProduct.idProduct" name="id" class="form-control" id="id">
+                            <input type="text" ngModel="{{editProduct?.reference}}" name="reference" class="form-control" id="inputReference" />
+                            <input type="hidden" ngModel="{{editProduct?.idProduct}}" name="id" class="form-control" id="id">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputPassword">Designation</label>
-                            <input type="text" [(ngModel)]="editProduct.designation" class="form-control" name="designation" id="inputDesignation">
+                            <input type="text" ngModel="{{editProduct?.designation}}" class="form-control" name="designation" id="inputDesignation">
                         </div>
                     </div>
                     <div class="form-group">
@@ -137,7 +138,55 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" >Save changes</button>
+                    <button type="submit" class="btn btn-warning" (click)="update(editForm.value)" >Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Show product details Modal -->
+<div class="modal fade" id="showProduct" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Add product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <img src="data:image/jpeg;base64,{{ detailProduct.picByte }}"alt="..." class="col-sm mb-1 img-thumbnail">
+                        <div class="form-group col-md-6">
+                            <label for="inputUsername">Reference</label>
+                            <input type="text" value={{detailProduct.reference}} class="form-control" name="reference" id="inputReference" />
+                            <input type="hidden" [(ngModel)]="editProduct.idProduct" name="id" class="form-control" id="id">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword">Designation</label>
+                            <input type="text" [(ngModel)]="editProduct.designation" class="form-control" name="designation" id="inputDesignation">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputFullname">Description</label>
+                        <input type="text" [(ngModel)]="editProduct.description" name="description" class="form-control" id="inputDescription" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail">Price</label>
+                        <input type="number" [(ngModel)]="editProduct.price" name="price" class="form-control" id="inputPrice" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPhone">Stock Quantity</label>
+                        <input type="number" class="form-control" [(ngModel)]="editProduct.stockQuantity" name="stockQuantity"
+                            id="inputStockQuantity" />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </form>
