@@ -1,6 +1,10 @@
 <app-navbar></app-navbar>
 <div class="container">
 
+  <div class="alert alert-success" *ngIf="orderSubmitted" role="alert">
+    Thank you! Your order was successfully submitted!
+  </div>
+
   <h1 class="display-4 pt-5 mb-0">Order</h1>
   <hr class="mt-0 mb-5 bg-dark">
 
@@ -8,7 +12,6 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th scope="col">#</th> <!-- image -->
           <th scope="col">Product</th>
           <th scope="col">Price</th>
           <th scope="col">Quantity</th>
@@ -16,19 +19,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-          <td>@mdo</td>
+        <tr *ngFor="let e of orderLines">
+          <td><img src="data:image/jpeg;base64,{{ e.product.picByte }}" width="100" alt="image"></td>
+          <td>{{ e.product.price }}</td>
+          <td>{{ e.quantity }}</td>
+          <td>{{ e.product.price * e.quantity }}</td>
         </tr>
       </tbody>
     </table>
@@ -43,13 +38,13 @@
     </div>
     <div class="row">
       <div class="col-md-4 ml-auto">
-        <label for="total"><b>TOTAL :</b></label>
+        <label for="total"><b>TOTAL :</b><b> {{ total }}.00 $</b></label>
         <hr class="mt-0 mb-5 bg-dark">
       </div>
     </div>
     <div class="row">
       <div class="col-md-4 ml-auto">
-        <button type="button" class="btn btn-success">Submit Order</button>
+        <button type="button" class="btn btn-success" (click)="submitOrder()">Submit Order</button>
 
       </div>
     </div>

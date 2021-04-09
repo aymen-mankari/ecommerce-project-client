@@ -1,6 +1,15 @@
 <app-navbar></app-navbar>
+
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 <div class="container">
+
+    <div *ngIf="flagStock" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Sorry!</strong> You have reached the stock limit of this product.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
     <i class="fa fa-cart"></i>
     <h1 class="display-4 pt-5 mb-0">Products</h1>
     <hr class="mt-0 mb-5 bg-dark">
@@ -9,8 +18,8 @@
         <div class="d-flex p-2 bd-highlight">
 
             <form class="form-inline">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <input class="form-control mr-sm-2" [formControl]="keyword"  type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" (click)="searchByKeyword()">Search</button>
             </form>
 
         </div>
@@ -46,21 +55,23 @@
             </div>
             -->
             <div class="card-deck">
-                <div class="col-lg-6" *ngFor="let product of arrayOfProducts" style="margin: 10px 0;">
+                <div class="col-lg-6" *ngFor="let p of products" style="margin: 10px 0;">
                     <div class="card">
-                        <img src={{product.imgUrl}} alt="..." class="img-thumbnail">
+                        <img src="data:image/jpeg;base64,{{ p.picByte }}" alt="..." class="img-thumbnail" style="min-height:400px;">
                         <div class="card-body">
-                            <h5 class="card-title">{{product.name}}</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                                additional content. This content is a little bit longer.</p>
+                            <h5 class="card-title">{{p.name}}</h5>
+                            <p class="card-text">{{ p.designation}}</p>
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#detailsProductModal">
+                            
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#detailsProductModal" (click)="detailsProduct(p)">
                                 View details</button>
-
+                                <b>{{ p.price }}.00 $</b>
+                            </div>
                             <!--<button type="button" class="btn btn-success" style="float: right;">Add to cart</button>-->
                         </div>
-                        <button type="button" class="btn btn-success">
+                        <button type="button" class="btn btn-success" (click)="addToCart(p)">
                             Add to cart</button>
                     </div>
                 </div>
@@ -82,47 +93,48 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body">
                 <h5>Product name</h5>
-                <img src="https://guesseu.scene7.com/is/image/GuessEU/AW6308VIS03-SAP?wid=700&amp;fmt=jpeg&amp;qlt=80&amp;op_sharpen=0&amp;op_usm=1.0,1.0,5,0&amp;iccEmbed=0"
-                    alt="..." class="img-thumbnail">
+                <img src="data:image/jpeg;base64,{{ currentProduct.picByte }}" alt="..." class="img-thumbnail">
                 <hr>
                 <h5>Description : </h5>
-                <p>Description product </p>
+                <p>{{currentProduct.description}} </p>
                 <hr>
 
                 <div class="row">
                     <div class="col-md-4">
                         <h5>Price : </h5>
-                        <p>Price product </p>
+                        <p>{{currentProduct.price}}</p>
                     </div>
                     <div class="col-md-4 offset-md-4">
                         <h5>Reference : </h5>
-                        <p>Reference product </p>
+                        <p>{{currentProduct.reference}} </p>
                     </div>
                 </div>
                 <hr>
-                <form>
-                    <div class="form-row">
+                
+                    <!--<div class="form-row">
                         <div class="col-md-6">
                             <h5>Quantity : </h5>
-                            <select id="inputQuantity" class="form-control">
+                            <select id="inputQuantity" name="quantity" ngModel class="form-control">
                                 <option selected>Choose...</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
                             </select>
                         </div>
-                    </div>
-                </form>
+                    </div>-->
+                
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success">Buy</button>
+                <button type="submit" class="btn btn-success" (click)="addToCart(currentProduct)">Add to cart</button>
             </div>
+
         </div>
     </div>
 </div>

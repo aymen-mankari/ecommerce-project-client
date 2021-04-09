@@ -4,6 +4,6 @@ import { OrderLine } from "./order-line";
 export class Order {
     idOrder: string;
     customer: Customer;
-    orderLines: OrderLine[];
+    orderLines: OrderLine[] = new Array();
     total: number;
 }

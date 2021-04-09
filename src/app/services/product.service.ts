@@ -20,8 +20,8 @@ export class ProductService {
   //'Content-Type': 
   private headers = new HttpHeaders({ 'Content-Type': 'undefined' });
 
-  saveProduct(product) {
-    return this.http.post(API_HOST + '/product/update', product);
+  saveOrUpdateProduct(product) {
+    return this.http.post(API_HOST + '/product/saveOrUpdate', product);
   }
 
   getAllProducts(): Observable<Product[]> {
@@ -32,9 +32,9 @@ export class ProductService {
     return this.http.get<Product>(API_HOST + '/product/getOne'+ `/${id}`);
   }
 
-  updateProduct(updatedProduct): Observable<Product> {
+  /*updateProduct(updatedProduct): Observable<Product> {
     return this.http.put<Product>(API_HOST + '/product/update', updatedProduct);
-  }
+  }*/
 
   deleteProduct(id: string): Observable<Product> {
     return this.http.delete<Product>(API_HOST + '/product/delete' + `/${id}`);

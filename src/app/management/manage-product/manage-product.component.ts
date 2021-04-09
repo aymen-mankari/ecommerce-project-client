@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
+
 declare const $: any;
 @Component({
   selector: 'app-manage-product',
@@ -9,22 +10,24 @@ declare const $: any;
   styleUrls: ['./manage-product.component.css']
 })
 export class ManageProductComponent implements OnInit {
-  
+
   constructor(private productService: ProductService, private formBuilder: FormBuilder) { }
 
   productForm: FormGroup;
 
   selectedFile: File;
-  retrievedImage: any;
+
+  editProduct=new Product();
+
+  /*retrievedImage: any;
   base64Data: any;
   retrieveResonse: any;
   message: string;
-  imageName: any;
+  imageName: any;*/
 
   product;
-  products;
-
-  editProduct :Product = new Product();
+  products: Product[];
+  detailProduct = new Product();
 
   ngOnInit(): void {
     this.productForm = this.formBuilder.group({
@@ -35,28 +38,22 @@ export class ManageProductComponent implements OnInit {
       stockQuantity: ['', Validators.required]
     });
 
-    /*this.productService.getAllProducts().subscribe(data =>{
+    //Init products list
+    this.productService.getAllProducts().subscribe(data => {
       console.log(data);
       this.products = data;
-    } , error => console.error(error));*/
-    this.refreshListproducts();
+    }, error => console.error(error));
   }
 
-  refreshListproducts(){
-    this.productService.getAllProducts().subscribe(data =>{
+  /*refreshListproducts() {
+    this.productService.getAllProducts().subscribe(data => {
       console.log(data);
       this.products = data;
-    } , error => console.error(error));
-  }
-
-  //Gets called when the user selects an image
-  public onFileChanged(event) {
-    //Select the current file
-    this.selectedFile = event.target.files[0];
-  }
+    }, error => console.error(error));
+  }*/
 
   save() {
-    
+
     this.product = this.productForm.value;
     console.log(this.product);
 
@@ -66,54 +63,56 @@ export class ManageProductComponent implements OnInit {
     productData.append('product', JSON.stringify(this.product));
     console.log(productData);
 
-    this.productService.saveProduct(productData)
-      .subscribe(response =>{
-        this.refreshListproducts();
+    this.productService.saveOrUpdateProduct(productData)
+      .subscribe(response => {
+        //this.refreshListproducts();
+        this.productService.getAllProducts().subscribe(data => {
+          console.log("refresh list products");
+          console.log(data);
+          this.products = data;
+        }, error => console.error(error));
         console.log(response);
       },
         error => console.error(error));
 
     $('#saveProduct').modal('hide');
-
   }
 
-
-  public onClickEdit(product: Product): void {
-    console.log(product);
-    this.editProduct = product;
-    /*this.productService.updateProduct(product).subscribe(
-      (response: Product) => {
-        console.log(response);
-        //this.getEmployees();
-      },
-      (error) => {
-        alert(error.message);
-      }
-    );*/
-  }
-
-  update(product : Product){
-    console.log(product);
+  update(updatedProduct: Product) {
+    console.log(updatedProduct);
 
     const updatedProductData = new FormData();
-    if(this.selectedFile!=null){
+    if (this.selectedFile != null) {
       updatedProductData.append('image', this.selectedFile);
+      updatedProductData.append('product', JSON.stringify(updatedProduct));
+      this.productService.saveOrUpdateProduct(updatedProductData).subscribe(
+        (response: Product) => {
+          console.log(response);
+          this.productService.getAllProducts().subscribe(data => this.products = data, error => console.error(error));
+        },
+        (error) => {
+          alert(error.message);
+        }
+      );
+    }else{
+      console.error("No image selected !");
     }
-    updatedProductData.append('product', JSON.stringify(this.editProduct));
 
-    /*this.productService.updateProduct(updatedProductData).subscribe(
-      (response: Product) => {
-        console.log(response);
-        //this.getEmployees();
-      },
-      (error) => {
-        alert(error.message);
-      }
-    );*/
+    $('#editProduct').modal('hide');
   }
 
-  detailProduct=new Product();
-  onRowClick(product){
-    this.detailProduct = product;
+  onClickEdit(productToEdit: Product): void {
+    console.log(productToEdit);
+    this.editProduct = productToEdit;
+  }
+
+  onShowDetails(selectedProduct: Product) {
+    console.log(selectedProduct);
+    this.detailProduct = selectedProduct;
+  }
+
+  //Gets called when the user selects an image
+  onFileChanged(event) {
+    this.selectedFile = event.target.files[0];
   }
 }

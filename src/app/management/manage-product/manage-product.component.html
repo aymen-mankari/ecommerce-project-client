@@ -29,8 +29,10 @@
                 <td>{{p.price}}</td>
                 <td>{{p.stockQuantity}}</td>
                 <td>
-                    <button type="button" class="btn btn-info mr-1" data-toggle="modal" data-target="#showProduct" (click)="onRowClick(p)">Show details</button>
-                    <button type="button" class="btn btn-warning mr-1" data-toggle="modal" data-target="#editProduct" (click)="onClickEdit(p)">Edit</button>
+                    <button type="button" class="btn btn-info mr-1" data-toggle="modal" data-target="#showProduct"
+                        (click)="onShowDetails(p)">Show details</button>
+                    <button type="button" class="btn btn-warning mr-1" data-toggle="modal" data-target="#editProduct"
+                        (click)="onClickEdit(p)">Edit</button>
                     <button type="button" class="btn btn-danger">Delete</button>
                 </td>
             </tr>
@@ -95,7 +97,7 @@
 <div class="modal fade" id="editProduct" data-backdrop="static" tabindex="-1" role="dialog"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-            <form #editForm="ngForm">
+        <form #editForm="ngForm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">Add product</h5>
@@ -105,29 +107,35 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
-                        <img src="data:image/jpeg;base64,{{ editProduct.picByte }}"alt="..." class="col-sm mb-1 img-thumbnail">
+                        <img src="data:image/jpeg;base64,{{ editProduct.picByte }}" alt="..."
+                            class="col-sm mb-1 img-thumbnail">
                         <div class="form-group col-md-6">
                             <label for="inputUsername">Reference</label>
-                            <input type="text" ngModel="{{editProduct?.reference}}" name="reference" class="form-control" id="inputReference" />
-                            <input type="hidden" ngModel="{{editProduct?.idProduct}}" name="id" class="form-control" id="id">
+                            <input type="text" ngModel="{{editProduct?.reference}}" name="reference"
+                                class="form-control" id="inputReference" />
+                            <input type="hidden" ngModel="{{editProduct?.idProduct}}" name="idProduct" class="form-control"
+                                >
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputPassword">Designation</label>
-                            <input type="text" ngModel="{{editProduct?.designation}}" class="form-control" name="designation" id="inputDesignation">
+                            <input type="text" ngModel="{{editProduct?.designation}}" class="form-control"
+                                name="designation" id="inputDesignation">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputFullname">Description</label>
-                        <input type="text" [(ngModel)]="editProduct.description" name="description" class="form-control" id="inputDescription" />
+                        <input type="text" ngModel="{{editProduct?.description}}" name="description" class="form-control"
+                            id="inputDescription" />
                     </div>
                     <div class="form-group">
                         <label for="inputEmail">Price</label>
-                        <input type="number" [(ngModel)]="editProduct.price" name="price" class="form-control" id="inputPrice" />
+                        <input type="number" ngModel="{{editProduct?.price}}" name="price" class="form-control"
+                            id="inputPrice" />
                     </div>
                     <div class="form-group">
                         <label for="inputPhone">Stock Quantity</label>
-                        <input type="number" class="form-control" [(ngModel)]="editProduct.stockQuantity" name="stockQuantity"
-                            id="inputStockQuantity" />
+                        <input type="number" class="form-control" ngModel="{{editProduct?.stockQuantity}}"
+                            name="stockQuantity" id="inputStockQuantity" />
                     </div>
 
                     <div class="form-group">
@@ -138,7 +146,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-warning" (click)="update(editForm.value)" >Save changes</button>
+                    <button type="submit" class="btn btn-warning" (click)="update(editForm.value)">Save changes</button>
                 </div>
             </div>
         </form>
@@ -152,36 +160,40 @@
         <form>
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Add product</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">Detail product : {{detailProduct.designation}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
-                        <img src="data:image/jpeg;base64,{{ detailProduct.picByte }}"alt="..." class="col-sm mb-1 img-thumbnail">
+                        <img src="data:image/jpeg;base64,{{ detailProduct.picByte }}" alt="..."
+                            class="col-sm mb-1 img-thumbnail">
                         <div class="form-group col-md-6">
                             <label for="inputUsername">Reference</label>
-                            <input type="text" value={{detailProduct.reference}} class="form-control" name="reference" id="inputReference" />
-                            <input type="hidden" [(ngModel)]="editProduct.idProduct" name="id" class="form-control" id="id">
+                            <input type="text" value={{detailProduct.reference}} class="form-control"
+                                name="reference" />
+                            <input type="hidden" value={{detailProduct.idProduct}} name="id" class="form-control">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputPassword">Designation</label>
-                            <input type="text" [(ngModel)]="editProduct.designation" class="form-control" name="designation" id="inputDesignation">
+                            <input type="text" value={{detailProduct.designation}} class="form-control"
+                                name="designation">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputFullname">Description</label>
-                        <input type="text" [(ngModel)]="editProduct.description" name="description" class="form-control" id="inputDescription" />
+                        <input type="text" value={{detailProduct.description}} name="description"
+                            class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="inputEmail">Price</label>
-                        <input type="number" [(ngModel)]="editProduct.price" name="price" class="form-control" id="inputPrice" />
+                        <input type="number" value={{detailProduct.price}} name="price" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="inputPhone">Stock Quantity</label>
-                        <input type="number" class="form-control" [(ngModel)]="editProduct.stockQuantity" name="stockQuantity"
-                            id="inputStockQuantity" />
+                        <input type="number" class="form-control" value={{detailProduct.stockQuantity}}
+                            name="stockQuantity" />
                     </div>
 
                 </div>

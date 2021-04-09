@@ -9,6 +9,9 @@ import { TokenStorageService } from '../services/token-storage/token-storage.ser
 
 import { CITIES } from '../commons/url.constants';
 import { CustomerService } from '../services/customer.service';
+import { UserService } from '../services/user.service';
+
+declare const $: any;
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,12 +21,14 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   registerForm: FormGroup;
+
   user: User;
-  customer = Customer;
+  customer: Customer = new Customer();
+  
   cities = CITIES;
 
   constructor(private formBuilder: FormBuilder, private route: Router, private loginService: LoginService,
-    private customerService: CustomerService, private tokenStorageService: TokenStorageService) { }
+    private customerService: CustomerService, private tokenStorageService: TokenStorageService,private userService : UserService) { }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -32,10 +37,12 @@ export class LoginComponent implements OnInit {
     });
 
     this.registerForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      fullname: ['', Validators.required],
-      email: ['', Validators.required],
+      user : this.formBuilder.group({
+        username: ['', Validators.required],
+        password: ['', Validators.required]
+      }),
+      fullName: ['', Validators.required],
+      emailAddress: ['', Validators.required],
       phone: ['', Validators.required],
       city: ['', Validators.required]
     })
@@ -54,29 +61,31 @@ export class LoginComponent implements OnInit {
         }
         console.log("authorization key : " + authorization);
         this.tokenStorageService.saveToken(authorization, this.user.username);
-        this.route.navigate(['home']);
+        
+        this.userService.findByUsername(this.user.username).subscribe((user:User) => {
+          if(!user.admin){
+            this.route.navigate(['home']);
+          }else{
+            this.route.navigate(['admin/product']);
+          }
+        });
+
       }, error => console.warn(error));
 
-    /*this.loginService.authenticate(this.user)
-      .subscribe(resp => {
-        let authorization = resp.headers.get('authorization');
-        console.warn(authorization);
-        this.tokenStorageService.saveToken(authorization, this.user.username);
-        this.route.navigate(['main']);
-
-      }, error => console.warn(error));*/
   }
 
   register() {
 
     this.customer = this.registerForm.value;
-
     console.log(this.customer);
+
+
     if (this.customer != null) {
         this.customerService.createCustomer(this.customer).subscribe(data => { console.log(data) }, error => console.warn(error));
     }
-    //$('#element').modal('hide');
-    //$('#register').modal('hide');
+
+    this.registerForm.reset();
+    $('#register').modal('hide');
   }
 
 }

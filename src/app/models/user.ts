@@ -2,5 +2,5 @@ export class User {
     idUser: string;
     username: string;
     password: string;
-    isAdmin: boolean;
+    admin: boolean;
 }
